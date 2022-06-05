@@ -1,7 +1,7 @@
 INTERFERENCE IN THE MACROWORLD
 ******************************
 
-Dependies:
+Dependencies:
 
 1. Install pymongo: pip install pymongo
 2. 

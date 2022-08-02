@@ -28,6 +28,8 @@ trip2 = db['trips_2008']
 #* Returns both in two dictionaries
 #* dict with keys being the identifier(_id, household_code), and the tracking identity(income, expenses) being the values
 
+combined_dict_year1 = {}
+
 def entities1_year1(t1, t1w):
     '''
     t1 = initial starting point
@@ -35,9 +37,8 @@ def entities1_year1(t1, t1w):
     '''
     #* dict with group1 with keys being the identifier(_id, household_code)
     #* and value being the tracking identity
-    group1_year1_dict = {}
+    # group1_year1_dict = {}
     group1_year2_dict = {}
-    ent = entities_year2()
 
     pipeline1 = [
         {'$group' : {'_id': '$household_code', 'total_spent': {'$sum': {'$toDouble': '$total_spent'}}}},
@@ -49,13 +50,13 @@ def entities1_year1(t1, t1w):
     for i in list(trips1.aggregate(pipeline1)):
         amt = float('{:.2f}'.format(i['total_spent']))
         house = i['_id']
-        group1_year1_dict[house] = amt
+        #group1_year1_dict[house] = amt
+        combined_dict_year1[house] = amt
         if house in ent:
             group1_year2_dict[house] = ent[house]
 
-    return group1_year1_dict, group1_year2_dict
+    return group1_year2_dict
 
-#***************************************************************************
 
 def entities2_year1(t2, t2w):
     '''
@@ -64,7 +65,7 @@ def entities2_year1(t2, t2w):
     '''
     #* dict with group1 with keys being the identifier(_id, household_code)
     #* and value being the data itself
-    group2_year1_dict = {}
+    # group2_year1_dict = {}
     group2_year2_dict = {}
 
     pipeline1 = [
@@ -73,33 +74,28 @@ def entities2_year1(t2, t2w):
         {'$match': {'total_spent': {'$lte': t2w}}},
         {'$sort': SON([('total_spent', 1)])}
     ]
-    
-    ent = entities_year2()
 
     for i in list(trips1.aggregate(pipeline1)):
         amt = float('{:.2f}'.format(i['total_spent']))
         house = i['_id']
-        group2_year1_dict[house] = amt
+        #group2_year1_dict[house] = amt
+        combined_dict_year1[house] = amt    
         if house in ent:
             group2_year2_dict[house] = ent[house]
 
-    return group2_year1_dict, group2_year2_dict
-
-#*****************************************************************************
+    return group2_year2_dict
 
 
 #* This functions returns all the entities in the second year alongside their tracking identities
 #* These are saved as a dictionary dict['_id'] = 'total_spent'
 
 def entities_year2():
-
     pipeline2 = [
-        {'$group' : {'_id': '$household_code', 'total_spent': {'$sum': {'$toDouble': '$total_spent'}}}}
+        {'$group': 
+            {'_id': '$household_code', 
+            'total_spent': {'$sum': {'$toDouble': '$total_spent'}}}}
     ]
-
-    print('aaaaaaaaaaa')
     all_entities_year2 = {}
-
     for i in list(trip2.aggregate(pipeline2)):
         amt = float('{:.2f}'.format(i['total_spent']))
         house = i['_id']
@@ -107,4 +103,4 @@ def entities_year2():
     
     return all_entities_year2
 
-
+ent = entities_year2()

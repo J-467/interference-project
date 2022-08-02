@@ -1,6 +1,8 @@
+from tempfile import _TemporaryFileWrapper
 import pymongo
 from pprint import pprint
 from bson.son import SON
+import re
 
 '''
 Mongo db saves items in the document format as opposed to the tables and rows format in SQL
@@ -18,10 +20,35 @@ db = client['consumerPanelData']
 
 # This prints the names of the collections
 #pprint(db.list_collection_names())
+trip_years = sorted([i.strip('trips_') for i in db.list_collection_names() if re.search('^trip', i)])
+
 
 # This connects to the trips_2007 collections in the db
-trips1 = db['trips_2007']
-trip2 = db['trips_2008']
+# trip1 = db['trips_2007']
+# trip2 = db['trips_2008']
+
+def trips():
+    print('These are the available years for analysis', trip_years)
+    print('Select the 2 years for analysis')
+
+    year1 = input('Select the first year for analysis: ').strip()
+    while year1 not in trip_years:
+        year1 = input('Select a valid year 1: ').strip()
+
+    year2 = input('Select the second year for analysis: ').strip()
+    while year2 not in trip_years:
+        year2 = input('Select a valid year 2: ').strip()
+
+    trip1 = db['trips_'+year1]
+    trip2 = db['trips_'+year2]
+
+    return trip1, trip2
+    #return year1, year2
+
+# year1, year2 = trips()
+# trip1 = db['trips_'+year1]
+# trip2 = db['trips_'+year2]
+
 
 
 #* This function finds the entities(households, individuals) and the values in both year 1 and year 2
@@ -30,7 +57,7 @@ trip2 = db['trips_2008']
 
 combined_dict_year1 = {}
 
-def entities1_year1(t1, t1w):
+def entities1_year1(t1, t1w, trip1, all_year2):
     '''
     t1 = initial starting point
     t1w = t1 + width   
@@ -47,18 +74,18 @@ def entities1_year1(t1, t1w):
         {'$sort': SON([('total_spent', 1)])}
     ]
 
-    for i in list(trips1.aggregate(pipeline1)):
+    for i in list(trip1.aggregate(pipeline1)):
         amt = float('{:.2f}'.format(i['total_spent']))
         house = i['_id']
         #group1_year1_dict[house] = amt
         combined_dict_year1[house] = amt
-        if house in ent:
-            group1_year2_dict[house] = ent[house]
+        if house in all_year2:
+            group1_year2_dict[house] = all_year2[house]
 
     return group1_year2_dict
 
 
-def entities2_year1(t2, t2w):
+def entities2_year1(t2, t2w, trip1, all_year2):
     '''
     t2 = initial starting point for group2
     t2w = t2 + width   
@@ -75,13 +102,13 @@ def entities2_year1(t2, t2w):
         {'$sort': SON([('total_spent', 1)])}
     ]
 
-    for i in list(trips1.aggregate(pipeline1)):
+    for i in list(trip1.aggregate(pipeline1)):
         amt = float('{:.2f}'.format(i['total_spent']))
         house = i['_id']
         #group2_year1_dict[house] = amt
         combined_dict_year1[house] = amt    
-        if house in ent:
-            group2_year2_dict[house] = ent[house]
+        if house in all_year2:
+            group2_year2_dict[house] = all_year2[house]
 
     return group2_year2_dict
 
@@ -89,7 +116,7 @@ def entities2_year1(t2, t2w):
 #* This functions returns all the entities in the second year alongside their tracking identities
 #* These are saved as a dictionary dict['_id'] = 'total_spent'
 
-def entities_year2():
+def entities_year2(trip2):
     pipeline2 = [
         {'$group': 
             {'_id': '$household_code', 
@@ -102,5 +129,3 @@ def entities_year2():
         all_entities_year2[house] = amt
     
     return all_entities_year2
-
-ent = entities_year2()

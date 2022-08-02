@@ -25,10 +25,18 @@ def main():
 
    #* These should be float input values
 
+   #* Selecting the 2 years for analysis
+   print('Interference Project of Macroeconomic data')
+
+
+   trip1, trip2 = queries.trips()
+
    #* Input values (float)
    t1 =  float(input('Starting value of the first group: '))
    width = float(input('Width of the two entities: '))
    dist = float(input('Distance between the 2 entities: '))
+
+   
 
    print('Preparing the relevant graphs...')
 
@@ -45,8 +53,11 @@ def main():
    #group1_year1, group1_year2 = queries.entities1_year1(t1, t1 + width)
    #group2_year1, group2_year2 = queries.entities2_year1(t2, t2 + width)
 
-   group1_year2 = queries.entities1_year1(t1, t1 + width)
-   group2_year2 = queries.entities2_year1(t2, t2 + width)
+   all_year2 = queries.entities_year2(trip2)
+
+   group1_year2 = queries.entities1_year1(t1, t1 + width, trip1, all_year2)
+   group2_year2 = queries.entities2_year1(t2, t2 + width, trip1, all_year2)
+
 
    combined_groups_year1 = queries.combined_dict_year1
 

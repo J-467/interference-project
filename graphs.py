@@ -85,8 +85,7 @@ def periodogram(min_val, max_val, combined_groups_year2):
     plt.figure('Periodogram')
     bins = np.arange(min_val, max_val + 1, 2)
     count, division = np.histogram(combined_groups_year2, bins = bins)
-    print('count: ', count)
-
+    
     p = Periodogram(count,sampling=100)
     plt.title('Periodogram of combined values')
     p.plot()

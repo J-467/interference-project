@@ -1,0 +1,19 @@
+from pprint import pprint
+from plotnine import ggplot,aes, geom_line
+from plotnine.data import economics
+from pandas import DataFrame
+import numpy as np
+
+
+np.random.seed(seed=42)
+data_points = 1000
+
+df = DataFrame(data=list(zip(np.random.choice(["Math", "English"], size=data_points),
+                                np.random.beta(15, 10, size=data_points),
+                                np.random.beta(30, 4, size=data_points))),
+            columns=['Major', 'Test1', 'Test2'])
+
+df.head()
+print('first_one')
+df.hist(column='Test1')
+print('second_one')

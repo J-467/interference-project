@@ -1,4 +1,3 @@
-from tempfile import _TemporaryFileWrapper
 import pymongo
 from pprint import pprint
 from bson.son import SON
@@ -39,11 +38,7 @@ def trips():
     while year2 not in trip_years:
         year2 = input('Select a valid year 2: ').strip()
 
-    trip1 = db['trips_'+year1]
-    trip2 = db['trips_'+year2]
-
-    return trip1, trip2
-    #return year1, year2
+    return db['trips_'+year1], db['trips_'+year2]
 
 # year1, year2 = trips()
 # trip1 = db['trips_'+year1]
@@ -92,7 +87,6 @@ def entities2_year1(t2, t2w, trip1, all_year2):
     '''
     #* dict with group1 with keys being the identifier(_id, household_code)
     #* and value being the data itself
-    # group2_year1_dict = {}
     group2_year2_dict = {}
 
     pipeline1 = [

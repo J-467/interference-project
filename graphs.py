@@ -1,13 +1,10 @@
-from spectrum import Periodogram, data_cosine
+from spectrum import Periodogram
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-
 
 def histograms(df_cgy1, df_cgy2, df_g1y2, df_g2y2, dist, width, bin):
     plt.style.use('ggplot')
-    pd.set_option('display.max_rows', None)
-    titl = "Separation: " + str(dist) + ' Width: ' + str(width)
+    #titl = "Separation: " + str(dist) + ' Width: ' + str(width)
     
     #* Figure 1
     plt.figure("Histogram of combined groups")
@@ -54,7 +51,7 @@ def cumulutive_graphs(df_cgy1, df_cgy2, df_g1y2, df_g2y2, bin):
     plt.tight_layout()
 
 def finest_cumulative(group1_year2, group2_year2, combined_groups_year2):
-    
+    ''' Matches the number of different points to the number of entities '''
     #* Finest cumulative using a line graph
     plt.style.use('ggplot')
     plt.figure('Combined finest cumulative graph')
@@ -85,7 +82,7 @@ def periodogram(min_val, max_val, combined_groups_year2):
     plt.figure('Periodogram')
     bins = np.arange(min_val, max_val + 1, 2)
     count, division = np.histogram(combined_groups_year2, bins = bins)
-    
-    p = Periodogram(count,sampling=100)
-    plt.title('Periodogram of combined values')
+
+    p = Periodogram(count,sampling=1000)
+    plt.title('Periodogram of combined year2 values')
     p.plot()

@@ -1,17 +1,15 @@
 import queries
 import graphs
-from pprint import pprint
+# from pprint import pprint
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
 '''
-dist is how wide the two groups are apart from each other (float)
+dist: how wide the two groups are apart from each other (float)
 lower bound is always just greater than, >
-uppper bound is always less than or equal to, <=
 uppper bound is always less than or equal to, <= eg. (4500,4600]
 The 2 entiites need to be of the same width
-
 '''
 
 def main():

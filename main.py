@@ -17,14 +17,15 @@ def main():
    #* These should be float input values
 
    #* Selecting the 2 years for analysis
-   print('These are the available years for analysis: ', queries.trip_years())
+   trip_years = queries.trip_years()
+   print('These are the available years for analysis: ', trip_years)
 
    year1 = input('Select the 1st year for analysis: ').strip()
-   while year1 not in queries.trip_years:
+   while year1 not in trip_years:
       year1 = input('Select a valid year 1: ').strip()
 
    year2 = input('Select the 2nd year for analysis: ').strip()
-   while year2 not in queries.trip_years:
+   while year2 not in trip_years:
       year2 = input('Select a valid year 2: ').strip()
 
    # Selects these particular 2 collections from the db

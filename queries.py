@@ -86,7 +86,7 @@ def entities2_year1(t2, t2w, trip1, all_year2):
     return group2_year2_dict
 
 
-def entities_year2(trip2):
+def entities_year2(year2):
     '''
     This function returns all the entities in the second year alongside their tracking identities
     These are saved as a dictionary dict['_id'] = 'total_spent'
@@ -100,7 +100,7 @@ def entities_year2(trip2):
 
     all_entities_year2 = {}
 
-    for i in list(trip2.aggregate(pipeline2)):
+    for i in list(year2.aggregate(pipeline2)):
         amt = float('{:.2f}'.format(i['total_spent']))
         entity = i['_id']
         all_entities_year2[entity] = amt
